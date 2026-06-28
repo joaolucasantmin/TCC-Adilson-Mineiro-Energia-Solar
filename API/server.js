@@ -19,13 +19,13 @@ const users = []
 app.post('/usuarios', (req, res) => {
 
   users.push(req.body)
-  res.send('Ok, post criado')
+  res.status(201).json(req.body)
 
 })
 
 //Listando usuarios
 app.get('/usuarios',  (req, res) => {
-  res.json(users)
+  res.status(200).json(users)
 })
 
 app.listen(3000, () => {
@@ -42,5 +42,7 @@ app.listen(3000, () => {
   -Editar um usuário
   -Deletar um usuário
 */
+
+//CONTINUAR APARTIR DE 38:00, porem ele usa o MongoDB, temos que adaptar para Supabase
 
 
