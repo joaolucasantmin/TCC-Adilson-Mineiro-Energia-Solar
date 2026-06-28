@@ -1,19 +1,46 @@
 import express from 'express'
-
-const app = express()
+// ou const express = require('express') porem esse modo esta "ultrapassado"
 
 /*Rotas precisam de:
   1- Tipo de rota / método HTTP
   2- Endereço*/
 
+//app.get('/usuarios') - traz os usuarios     : Listar 
+//app.post('/usuarios')- cria novo usuario    : Criar
+//app.put('/usuarios') - edita um usuario     : Editar vários
+//app.delete('/usuarios') - deleta um usuario : Deletar
 
-app.get('/', (req, res) => {
-  res.send('Hello World')
+const app = express()
+app.use(express.json())
+
+const users = []
+
+//Criando usuarios (temporario até criar um bando de dados)
+app.post('/usuarios', (req, res) => {
+
+  users.push(req.body)
+  res.send('Ok, post criado')
+
+})
+
+//Listando usuarios
+app.get('/usuarios',  (req, res) => {
+  res.json(users)
 })
 
 app.listen(3000, () => {
   console.log('Server is running on http://localhost:3000')
 })
 
+//"node --watch server.js" executa toda vez que abrir o VSS
+//adiciona tambem a extensão THUNDER CLIENT para teste da requisição
 
-//CONTINUAR A PARTIR DE DO MINUTO 13:30 DO VIDEO https://www.youtube.com/watch?v=PyrMT0GA3sE
+/*
+   Criar nossa API de Usuários 
+  -Criar um usuário
+  -Listar todos os usuários
+  -Editar um usuário
+  -Deletar um usuário
+*/
+
+
