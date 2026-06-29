@@ -44,5 +44,5 @@ app.listen(3000, () => {
 */
 
 //CONTINUAR APARTIR DE 38:00, porem ele usa o MongoDB, temos que adaptar para Supabase
-
+// implementar a chuquinha no Cascao
 
