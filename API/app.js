@@ -26,6 +26,20 @@ app.post('/tbusuario', async (req, res) => {
 
     return res.status(201).json({ message: 'Usuário inserido com sucesso', data });
 });
+app.get('/tbusuario', async (req, res) => {
+    const { nome_usuario, email_usuario, senha_usuario, foto_usuario } = req.body;
+
+
+    const { data, error } = await supabase
+        .from('tbusuario')
+        .select('*');
+    if (error) {
+        return res.status(500).json({ error: error.message });
+    }
+
+    return res.status(200).json({ usuario: data });
+});
+
 
 app.listen(porta, () => {
     console.log(`Servidor rodando em http://localhost:${porta}`);
