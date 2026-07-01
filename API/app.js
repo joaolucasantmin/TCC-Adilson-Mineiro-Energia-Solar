@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
-
+//registro de usuário
 app.post('/tbusuario', async (req, res) => {
     const { nome_usuario, email_usuario, senha_usuario, foto_usuario } = req.body;
 
@@ -26,6 +26,7 @@ app.post('/tbusuario', async (req, res) => {
 
     return res.status(201).json({ message: 'Usuário inserido com sucesso', data });
 });
+// consulta de usuário
 app.get('/tbusuario', async (req, res) => {
     const { nome_usuario, email_usuario, senha_usuario, foto_usuario } = req.body;
 
@@ -38,6 +39,39 @@ app.get('/tbusuario', async (req, res) => {
     }
 
     return res.status(200).json({ usuario: data });
+});
+
+// deleta usuario
+app.delete('/tbusuario/:id', async (req, res) => {
+    const { id } = req.params;
+
+    const { data, error } = await supabase
+        .from('tbusuario')
+        .delete()
+        .eq('id', id);
+
+    if (error) {
+        return res.status(500).json({ error: error.message });
+    }
+
+    return res.status(200).json({ message: 'Usuário deletado com sucesso', data });
+});
+
+// atualiza usuario
+app.put('/tbusuario/:id', async (req, res) => {
+    const { id } = req.params;
+    const { nome_usuario, email_usuario, senha_usuario, foto_usuario } = req.body;
+
+    const { data, error } = await supabase
+        .from('tbusuario')
+        .update({ nome_usuario, email_usuario, senha_usuario, foto_usuario })
+        .eq('id', id);
+
+    if (error) {
+        return res.status(500).json({ error: error.message });
+    }
+
+    return res.status(200).json({ message: 'Usuário atualizado com sucesso', data });
 });
 
 
