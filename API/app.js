@@ -45,11 +45,12 @@ app.get('/tbusuario', async (req, res) => {
 app.delete('/tbusuario/:id', async (req, res) => {
     const { id } = req.params;
 
-    const { data, error, select } = await supabase
+    const { data, error } = await supabase // Removido o select daqui que tava dando ruim
         .from('tbusuario')
         .delete()
         .eq('id', id)
-        .select(); //retorna ao usuario deletado, para uma possivel confirmacao, nao sei se a gente vai usar
+        .select(); 
+
     if (error) {
         return res.status(500).json({ error: error.message });
     }
