@@ -18,7 +18,8 @@ app.post('/tbusuario', async (req, res) => {
 
     const { data, error } = await supabase
         .from('tbusuario')
-        .insert([{ nome_usuario, email_usuario, senha_usuario, foto_usuario }]);
+        .insert([{ nome_usuario, email_usuario, senha_usuario, foto_usuario }])
+        .select();
 
     if (error) {
         return res.status(500).json({ error: error.message });
@@ -28,9 +29,6 @@ app.post('/tbusuario', async (req, res) => {
 });
 // consulta de usuário
     app.get('/tbusuario', async (req, res) => {
-    const { nome_usuario, email_usuario, senha_usuario, foto_usuario } = req.body;
-
-
     const { data, error } = await supabase
         .from('tbusuario')
         .select('*');
