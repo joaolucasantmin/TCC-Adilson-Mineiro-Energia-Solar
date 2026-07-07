@@ -6,22 +6,50 @@ const router = express.Router();
 
 
 
-// Rota de Cadastro (POST)
 router.post('/cadastro', async (req, res) => {
 
     try {
+
         const user = req.body;
 
-        //Validando se todos os campos estao preenchidos
+        // Validando campos obrigatórios
         if (!user.nome_usuario || !user.email_usuario || !user.senha_usuario) {
             return res.status(400).json({
                 error: 'Todos os campos são obrigatórios.'
             });
         }
 
-        //Critografaçaõ da senha
+        // Verifica se já existe usuário com mesmo e-mail ou nome
+        const { data: usuarioExistente, error: erroBusca } = await supabase
+            .from('usuarios')
+            .select('id, nome_usuario, email_usuario')
+            .or(`email_usuario.eq.${user.email_usuario},nome_usuario.eq.${user.nome_usuario}`);
+
+        if (erroBusca) {
+            return res.status(500).json({
+                error: erroBusca.message
+            });
+        }
+
+        if (usuarioExistente.length > 0) {
+
+            if (usuarioExistente.some(u => u.email_usuario === user.email_usuario)) {
+                return res.status(409).json({
+                    error: 'Este e-mail já está cadastrado.'
+                });
+            }
+
+            if (usuarioExistente.some(u => u.nome_usuario === user.nome_usuario)) {
+                return res.status(409).json({
+                    error: 'Este nome de usuário já está em uso.'
+                });
+            }
+        }
+
+        // Criptografa a senha
         const senhaHash = await bcrypt.hash(user.senha_usuario, 10);
 
+        // Insere o usuário
         const { data, error } = await supabase
             .from('usuarios')
             .insert([{
@@ -33,7 +61,9 @@ router.post('/cadastro', async (req, res) => {
             .select();
 
         if (error) {
-            return res.status(500).json(error);
+            return res.status(500).json({
+                error: error.message
+            });
         }
 
         return res.status(201).json(data);
