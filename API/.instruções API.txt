@@ -13,3 +13,15 @@ Futuras melhorias pra API
 -Criptografar senhas (tem uma biblioteca chamada bcrypt, depois vamos ver sobre)
 -Nao cadastrar com mesmo email
 -Todos campos preenchidos
+
+
+SENHA USUARIOS COM HASH: 
+id 1: 123456
+id 3: xyxyxyx
+id 4: jlf220609
+id 6: Morgana<3
+id 7: if298
+id 8: 290587
+id 9: cuxcuz
+id 11: nao lembro
+id 12: login

@@ -5,7 +5,7 @@ import supabase from '../config/supabase.js';
 const router = express.Router();
 
 
-
+//Rota de Cadastro (POST)
 router.post('/cadastro', async (req, res) => {
 
     try {
@@ -160,6 +160,60 @@ router.put('/usuarios/:id', async (req, res) => {
         data
     });
 
+});
+
+
+router.post('/login', async (req, res) =>{
+    try {
+        const {email_usuario, senha_usuario} = req.body;
+
+        if(!email_usuario || !senha_usuario){
+            return res.status(400).json({
+                error: "Informe e-mail e senha!"
+            });
+        }
+
+        const { data: usuario, error } = await supabase
+            .from('usuarios')
+            .select('*')
+            .eq('email_usuario', email_usuario)
+            .single();
+
+        //Caso usuario for inválido informar erro    
+        if(error || !usuario){
+            return res.status(401).json({
+                error: "e-mail ou senha inválidos!"
+            });
+        }
+
+        //Comparando senha no banco com a digitada
+        const senhaCorreta = await bcrypt.compare(
+            senha_usuario,
+            usuario.senha_usuario
+        );
+        //Se senha incorreta
+        if(!senhaCorreta){
+            return res.status(401).json({
+                error: "e-mail ou senha inválidos!"
+            });
+        }
+
+        //Retornando caso Login realizado com sucesso
+        return res.status(200).json({
+            message: "Login realizado com sucesso!",
+            usuario:{
+                id: usuario.id,
+                nome_usuario: usuario.nome_usuario,
+                email_usuario: usuario.email_usuario,
+                foto_usuario: usuario.foto_usuario
+            }
+        });
+
+
+
+    } catch (error) {
+        res.status(500).json({message: 'Erro no Servidor!'})
+    }
 });
 
 
