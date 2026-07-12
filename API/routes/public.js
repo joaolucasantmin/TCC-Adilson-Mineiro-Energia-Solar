@@ -1,5 +1,6 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import supabase from '../config/supabase.js';
 
 const router = express.Router();
@@ -79,90 +80,7 @@ router.post('/cadastro', async (req, res) => {
 });
 
 
-
-// Rota de Consulta (GET)
-router.get('/usuarios', async (req, res) => {
-
-    const { data, error } = await supabase
-        .from('usuarios')
-        .select('*');
-
-    if (error) {
-        return res.status(500).json({
-            error: error.message
-        });
-    }
-
-    return res.status(200).json({
-        usuarios: data
-    });
-
-});
-
-// Rota de Exclusão (DELETE)
-router.delete('/usuarios/:id', async (req, res) => {
-
-    const { id } = req.params;
-
-    const { data, error } = await supabase
-        .from('usuarios')
-        .delete()
-        .eq('id', id)
-        .select();
-
-    if (error) {
-        return res.status(500).json({
-            error: error.message
-        });
-    }
-
-    return res.status(200).json({
-        message: 'Usuário deletado com sucesso!',
-        data
-    });
-
-});
-
-
-
-
-// Rota de Atualização (PUT)
-router.put('/usuarios/:id', async (req, res) => {
-
-    const { id } = req.params;
-    const { nome_usuario, email_usuario, senha_usuario, foto_usuario } = req.body;
-
-    let dadosAtualizados = {
-        nome_usuario,
-        email_usuario,
-        foto_usuario
-    };
-
-    // Se enviou uma nova senha, criptografa ela
-    if (senha_usuario) {
-        dadosAtualizados.senha_usuario = await bcrypt.hash(senha_usuario, 10);
-    }
-
-    const { data, error } = await supabase
-        .from('usuarios')
-        .update(dadosAtualizados)
-        .eq('id', id)
-        .select();
-
-    if (error) {
-        return res.status(500).json({
-            error: error.message
-        });
-    }
-
-    return res.status(200).json({
-        message: 'Usuário atualizado com sucesso!',
-        data
-    });
-
-});
-
-
+//Rota de Login
 router.post('/login', async (req, res) =>{
     try {
         const {email_usuario, senha_usuario} = req.body;
@@ -198,9 +116,22 @@ router.post('/login', async (req, res) =>{
             });
         }
 
+        //Gerar Token JWT
+        const token = jwt.sign(
+            {
+                id: usuario.id,
+                email: usuario.email_usuario
+        },
+        process.env.JWT_SECRET,
+        {
+            expiresIn: "1h"
+        }
+    );
+
         //Retornando caso Login realizado com sucesso
         return res.status(200).json({
             message: "Login realizado com sucesso!",
+            token,
             usuario:{
                 id: usuario.id,
                 nome_usuario: usuario.nome_usuario,
@@ -208,7 +139,6 @@ router.post('/login', async (req, res) =>{
                 foto_usuario: usuario.foto_usuario
             }
         });
-
 
 
     } catch (error) {

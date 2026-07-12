@@ -1,7 +1,7 @@
 No cmd use "cd C:\Users\Adilson\Documents\TCC-Adilson-Mineiro-Energia-Solar\TCC-Adilson-Mineiro-Energia-Solar\API"
 para ir na pasta do projeto (NA LOJA)
 
-No cmd use "cd C:\Users\Adilson\Documents\TCC-Adilson-Mineiro-Energia-Solar\API"
+No cmd use "cd C:\Users\João\Documents\git\TCC-Adilson-Mineiro-Energia-Solar\API"
 para ir na pasta do projeto (CASA JOÃO)
 
 
