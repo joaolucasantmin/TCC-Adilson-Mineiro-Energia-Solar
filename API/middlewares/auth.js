@@ -15,20 +15,28 @@ const auth = (req, res, next) =>{
         });
     }
 
-    try{
-        const decoded = jwt.verify(token.replace('Bearer ', ''), JWT_SECRET);
+    try {
+    const decoded = jwt.verify(
+        token.replace("Bearer ", ""),
+        JWT_SECRET
+    );
 
-        req.usuario = decoded;
+    console.log("TOKEN DECODIFICADO:");
+    console.log(decoded);
 
-         next()
+    req.usuario = decoded;
 
-    }catch(error){
-        return res.status(401).json({
-            message: 'Token inválido!'
-        });
+    next();
 
-        console.log(decoded)
-    }
+} catch (error) {
+
+    console.log(error);
+
+    return res.status(401).json({
+        message: "Token inválido!"
+    });
+
+}
 
 };
 
