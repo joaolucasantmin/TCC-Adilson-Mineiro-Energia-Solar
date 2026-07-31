@@ -109,6 +109,7 @@ router.post('/login', async (req, res) =>{
             senha_usuario,
             usuario.senha_usuario
         );
+
         //Se senha incorreta
         if(!senhaCorreta){
             return res.status(401).json({

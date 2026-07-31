@@ -49,9 +49,8 @@ export default function Login() {
                     navigate("/home");
 
                 } catch (error) {
+
                     alert("Email ou senha incorretos!")
-
-
                 }
 
             console.log(dados);
